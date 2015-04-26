@@ -8,7 +8,7 @@ function Box(rowIndex, columnIndex) {
 	this._columnIndex = columnIndex;
 	// Completion status
 	this._completed = false;
-	this._completedBy = null;
+	this._completerPlayer = null;
 	// Self-register on creation
 	this.register();
 }
@@ -44,5 +44,53 @@ $.extend(Box.prototype,{
 
 	register: function () {
 		Box.registry[this._rowIndex][this._columnIndex] = this;
+	},
+
+	complete: function () {
+		this._completed = true;
+	},
+
+	isCompleted: function () {
+		return this._completed;
+	},
+
+	setCompleterPlayer: function (completer) {
+		this._completerPlayer = completer;
+	},
+
+	getCompleterPlayer: function () {
+		return this._completerPlayer;
+	},
+
+	//all the lines composing the current box
+
+	topLine: function () {
+		return Line.registry['rows'][this._rowIndex][this._columnIndex];
+	},
+
+	bottomLine: function () {
+		return Line.registry['rows'][this._rowIndex +1][this._columnIndex];
+	},
+
+	leftLine: function () {
+		return Line.registry['columns'][this._columnIndex][this._rowIndex];
+	},
+
+	rightLine: function () {
+		return 	Line.registry['columns'][this._columnIndex +1][this._rowIndex];
+	},
+
+	allLinesMarked: function () {
+		return this.topLine().isMarked() && this.bottomLine().isMarked() && this.leftLine().isMarked() && this.rightLine().isMarked();
+	},
+
+	calculateCompleted: function () {
+		if (this.isCompleted()) {return false;}
+		else if (this.allLinesMarked()){
+			this.complete();
+			this.setCompleterPlayer(Game.getCurrentPlayer());
+			return true;
+		}
 	}
+
 });

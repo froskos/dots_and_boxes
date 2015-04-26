@@ -4,11 +4,10 @@
 
 function Line(type, rowOrColumnIndex, lineIndex) {
 	this._type = type;
-	// this._rowIndex = type == 'horizontal'? rowOrColumnIndex : null;  //index of the row containing the line if it is horizontal
 	this._rowOrColumnIndex = rowOrColumnIndex; //index of the column or row containing the line if it is vertical
 	this._lineIndex = lineIndex; //the index of the line inside its row or column
 	this._marked = false;
-	//this._boxes = null;
+	this._boxes = null;
 	this.register();
 }
 
@@ -50,7 +49,6 @@ $.extend(Line.prototype,{
 
 	mark: function () {
 		this._marked = true;
-		this.checkIfClosedBox();
 	},
 
 	// Position-related methods
@@ -63,19 +61,19 @@ $.extend(Line.prototype,{
 	},
 
 	isLeftBorder: function () {
-		this.isVertical() && this._columnIndex == 0;
+		return this.isVertical() && this._rowOrColumnIndex == 0;
 	},
 
 	isTopBorder: function () {
-		this.isHorizontal() && this._rowIndex == 0;
+		return this.isHorizontal() && this._rowOrColumnIndex == 0;
 	},
 
 	isRightBorder:function () {
-		this.isVertical() && this._columnIndex == Config.boardSize;
+		return this.isVertical() && this._rowOrColumnIndex == Config.boardSize;
 	},
 
 	isBottomBorder:function () {
-		this.isHorizontal() && this._rowIndex == Config.boardSize;
+		return this.isHorizontal() && this._rowOrColumnIndex == Config.boardSize;
 	},
 
   template: function() {
@@ -87,12 +85,42 @@ $.extend(Line.prototype,{
 	// Returns the box(es) from which this line makes part 
 
 	getBoxes: function () {
-		if (this.boxes) {
-			return this.boxes;
+		if (this._boxes) {
+			return this._boxes;
 		} 
 		else {
-			this.calculateAndRegisterBoxes();
+			var a =	this.calculateBoxes();
+			return a;
 		}
+	},
+
+	calculateBoxes: function () {
+		var boxes = [];
+
+		if(this.isHorizontal()) {
+			if(!this.isTopBorder())
+				boxes.push(Box.getByCoords(this._rowOrColumnIndex - 1,this._lineIndex));
+			if(!this.isBottomBorder()) 
+				boxes.push(Box.getByCoords(this._rowOrColumnIndex, this._lineIndex));
+		}
+		if(this.isVertical()) {
+			if(!this.isLeftBorder())
+				boxes.push(Box.getByCoords(this._lineIndex,this._rowOrColumnIndex - 1));
+			if(!this.isRightBorder())
+				boxes.push(Box.getByCoords(this._lineIndex,this._rowOrColumnIndex));
+		}
+		this._boxes = boxes;
+		return boxes;
+	},
+
+	checkIfClosedBox: function () {
+		var returnValue = false;
+		var boxes = this.getBoxes();
+		for(var i=0; i < boxes.length; i++) {
+			if (boxes[i].calculateCompleted())
+				returnValue = true;
+		}
+		return returnValue;
 	}
 
 });

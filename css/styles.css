@@ -1,5 +1,10 @@
-div {
-	float: left;
+#container {
+	text-align: center;
+}
+
+#board {
+	margin-top: 3em;
+	display:inline-block;
 }
 
 .display-row {
@@ -8,16 +13,13 @@ div {
 }
 
 .line {
+	float:left;
 	background-color: white;
 	border: 1px solid black;
 }
 
 .line.marked {
 	background-color: black;
-  -webkit-transition: all 1s ease-in-out;
-  -moz-transition: all 1s ease-in-out;
-  -o-transition: all 1s ease-in-out;
-  transition: all 1s ease-in-out;
 }
 
 .vertical {
@@ -31,6 +33,7 @@ div {
 }
 
 .box {
+	float: left;
 	width: 50px;
 	height: 50px;
 	background-color: white;
@@ -45,6 +48,7 @@ div {
 }
 
 .point {
+	float: left;
 	width: 10px;
 	height: 10px;
 	background-color: black;

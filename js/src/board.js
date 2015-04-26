@@ -22,7 +22,7 @@ var Board = {
 		var rowCounter = 0;
 		$('#board').empty().off('click');
 		
-		$.each(Line.registry.rows, function () { //the choice of rows
+		$.each(Line.registry.rows, function () { //iterating on rows is trivial, it could be done with columns too, although the logic below would be different
 			var verticalLinesRowTemplate = $('<div class="display-row vert-row">');
 			var horizontalLinesRowTemplate = $('<div class="display-row horiz-row">');
 			var pointTemplate = $('<div class="point">');
@@ -39,33 +39,20 @@ var Board = {
 				}
 				if(rowCounter < Config.boardSize) {
 					var vertLine = Line.getByCoords('columns', colCounter, rowCounter);
+					
 					$('<div class="line vertical">').appendTo(verticalLinesRowTemplate).data('LineObj', vertLine).addClass(vertLine.isMarked()?'marked':'' );
-					$('<div class="box">').appendTo(verticalLinesRowTemplate).data('BoxObj', Box.getByCoords(rowCounter,colCounter));
+
+					if(colCounter < Config.boardSize) {
+						var box = Box.getByCoords(rowCounter,colCounter);
+						$('<div class="box">').appendTo(verticalLinesRowTemplate).data('BoxObj', box).css('background-color', box.getCompleterPlayer());
+					}
 				}
 			}
 			$('#board').append(horizontalLinesRowTemplate);
 			$('#board').append(verticalLinesRowTemplate);
 			rowCounter +=1;
 		});
-		$('#board').on('click', '.line', this.lineClick);
-	},
-
-	lineClick: function (event) {
-		var lineObj =	$(this).data('LineObj');
-		console.info(lineObj);
-		if (lineObj.isMarked()) {
-			return false;
-		}
-		else {
-			lineObj.mark();
-			Board.render();
-		}
-	},
-
-	boardTemplate: '',
-	
-	initialize: function () {
-		this.create(this._size)
-	},
+		$('#board').on('click', '.line', Game.lineClicked);
+	}
 
 };
