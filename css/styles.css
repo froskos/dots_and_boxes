@@ -1,0 +1,51 @@
+div {
+	float: left;
+}
+
+.display-row {
+	float: left;
+	clear: both;
+}
+
+.line {
+	background-color: white;
+	border: 1px solid black;
+}
+
+.line.marked {
+	background-color: black;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+
+.vertical {
+ 	width: 8px;
+ 	height: 48px;
+}
+
+.horizontal {
+	width: 48px;
+	height: 8px;
+}
+
+.box {
+	width: 50px;
+	height: 50px;
+	background-color: white;
+}
+
+.box.player1 {
+	background-color: red;
+}
+
+.box.player2 {
+	background-color: yellow;
+}
+
+.point {
+	width: 10px;
+	height: 10px;
+	background-color: black;
+}
