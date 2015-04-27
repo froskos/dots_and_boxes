@@ -33,6 +33,8 @@ $.extend(Box, {
 		return this.registry[rowIndex][columnIndex];
 	},
 
+	template: '<div class="box">'
+
 });
 
 /*
@@ -63,8 +65,7 @@ $.extend(Box.prototype,{
 		return this._completerPlayer;
 	},
 
-	//all the lines composing the current box
-
+	// Methods returning each of the lines composing the current box
 	topLine: function () {
 		return Line.registry['rows'][this._rowIndex][this._columnIndex];
 	},
@@ -81,6 +82,7 @@ $.extend(Box.prototype,{
 		return 	Line.registry['columns'][this._columnIndex +1][this._rowIndex];
 	},
 
+	// Boolean method for determining whether a box is complete
 	allLinesMarked: function () {
 		return this.topLine().isMarked() && this.bottomLine().isMarked() && this.leftLine().isMarked() && this.rightLine().isMarked();
 	},
@@ -91,7 +93,7 @@ $.extend(Box.prototype,{
 			this.setCompleterPlayer(Game.getCurrentPlayer());
 			return true;
 		}
-		return false
+		return false;
 	}
 
 });

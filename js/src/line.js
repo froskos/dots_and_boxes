@@ -16,7 +16,7 @@ function Line(type, rowOrColumnIndex, lineIndex) {
 */
 
 $.extend(Line, {
-	//class methods
+	//Generates two empty (Config.boardSize+1 X Config.boardSize) matrices, for representing rows of horizontal lines and columns of vertical lines 
 	registry: (function() {
 		var rows = new Array(Config.boardSize + 1),
 		columns = new Array(Config.boardSize + 1);
@@ -25,7 +25,7 @@ $.extend(Line, {
 			columns[i] = new Array(Config.boardSize);
 		}
 		return {rows:rows,columns:columns};
-	})(), //this generates a Config.boardSize x Config.boardSize matrix
+	})(),
 
 
 	getByCoords: function (rowsOrColumns, rowOrColumnIndex,lineIndex) {
@@ -34,14 +34,19 @@ $.extend(Line, {
 
 });
 
+/*
+	Line instance methods
+*/
+
 $.extend(Line.prototype,{
 	// Determines whether the line corresponds to a row of lines or a column of lines
 	inRowOrColumn: function() {return this._type === 'horizontal'? 'rows':'columns'},
 
-	// Register
+	// Register a newly created line
 	register: function () {
 		Line.registry[this.inRowOrColumn()][this._rowOrColumnIndex][this._lineIndex] = this;
 	},
+
 	// Marked status-related methods
 	isMarked: function () {
 		return this._marked;
@@ -64,18 +69,11 @@ $.extend(Line.prototype,{
 		return this._rowOrColumnIndex == 0;
 	},
 
-	isRighOrBottomBorder:function () {
+	isRighOrBottomBorder: function () {
 		return this._rowOrColumnIndex == Config.boardSize;
 	},
 
-  template: function() {
-  	return this.isVertical()? this.templateVertical : this.templateHorizontal;
-  },
-	templateVertical: $('<div class="vertical-line">'),
-	templateHorizontal: $('<div class="horizontal-line">'),
-
-	// Returns the box(es) from which this line makes part 
-
+	// Returns the box(es) which contain this line 
 	getBoxes: function () {
 		var boxes = [];
 
@@ -94,8 +92,7 @@ $.extend(Line.prototype,{
 		return boxes;
 	},
 
-	//
-
+	// Checks if the current move closed a new box. Used to determine if the player should play a move again
 	hasClosedBox: function () {
 		var returnValue = false;
 		var boxes = this.getBoxes();
@@ -104,6 +101,13 @@ $.extend(Line.prototype,{
 				returnValue = true;
 		}
 		return returnValue;
-	}
+	},
+
+	// Line templates used by the board when rendering
+	getTemplate: function() {
+  	return this.isVertical()? this.templateVertical : this.templateHorizontal;
+  },
+	templateVertical: '<div class="line vertical">',
+	templateHorizontal: '<div class="line horizontal">',
 
 });

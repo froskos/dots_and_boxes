@@ -1,8 +1,9 @@
 var Game = {
-	_player1: {colour:'red', completedBoxes:0 },
-	_player2: {colour:'yellow', completedBoxes:0 },
+	// We could extract players as different objects and do more things, like keeping a game history!
+	_player1: {colour: Config.player1Colour, completedBoxes:0 },
+	_player2: {colour: Config.player2Colour, completedBoxes:0 },
+	
 	totalBoxes: Config.boardSize * Config.boardSize,
-	// I could extract players as another object and do more things, like keeping a count of the games won by each player!
 
 	_currentPlayer: null,
 
@@ -14,6 +15,7 @@ var Game = {
 		return this._currentPlayer;
 	},
 
+	//This method could be a potential instance method for a player object as well
 	increaseCompletedBoxes: function (player) {
 		player.completedBoxes += 1;
 	},
@@ -33,16 +35,17 @@ var Game = {
 		this._player2.completedBoxes = 0;
 	},
 
+
+	isFinished: function () {
+		return (this._player1.completedBoxes + this._player2.completedBoxes) == this.totalBoxes;
+	},
+
 	init: function () {
 		Board.create();
 		Board.render();
 		Game.setCurrentPlayer(this._player1);
 		this.renderInfo();
 		$('#new-game').click(this.restartClicked);
-	},
-
-	isFinished: function () {
-		return (this._player1.completedBoxes + this._player2.completedBoxes) == this.totalBoxes;
 	},
 
 	// Handler for when a line is clicked
@@ -57,6 +60,7 @@ var Game = {
 		Game.renderInfo();
 	},
 
+	// Handler for the restart button click event
 	restartClicked: function () {
 		Board.reset();
 		Game.clearPlayerScores();
@@ -64,6 +68,7 @@ var Game = {
 		Game.renderInfo();
 	},
 
+	// Renders feedback about the game status
 	renderInfo: function () {
 		if(this.isFinished()) {
 			if(this.getWinner()) {

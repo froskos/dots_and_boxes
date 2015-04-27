@@ -1,3 +1,7 @@
+/*
+	Board object - for managing the creation and rendering of the game board, 
+*/
+
 var Board = {
 
 	create: function () {
@@ -18,39 +22,41 @@ var Board = {
 		this.render();
 	},
 
+	pointTemplate:'<div class="point">',
+	verticalLinesRowTemplate: '<div class="display-row vert-row">',
+	horizontalLinesRowTemplate: '<div class="display-row horiz-row">',
+
 	render: function () {
 		var self = this;
 		var rowCounter = 0;
 		$('#board').empty().off('click');
 		
-		$.each(Line.registry.rows, function () { //iterating on rows is trivial, it could be done with columns too, although the logic below would be different
-			var verticalLinesRowTemplate = $('<div class="display-row vert-row">');
-			var horizontalLinesRowTemplate = $('<div class="display-row horiz-row">');
-			var pointTemplate = $('<div class="point">');
-			var boxTemplate = $('<div class="box">');
+		$.each(Line.registry.rows, function () { 
+			var vLinesRow = $(self.verticalLinesRowTemplate);
+			var hLinesRow = $(self.horizontalLinesRowTemplate);
 
 			for(var colCounter=0; colCounter <= Config.boardSize; colCounter++) {
 				if(colCounter < Config.boardSize) {
 					if (colCounter == 0) {
-						$('<div class="point">').appendTo(horizontalLinesRowTemplate);
+						$(self.pointTemplate).appendTo(hLinesRow);
 					}
-					var horizLine = Line.getByCoords('rows', rowCounter, colCounter);
-					$('<div class="line horizontal">').appendTo(horizontalLinesRowTemplate).data('LineObj', horizLine).addClass(horizLine.isMarked()?'marked':'' );
-					$('<div class="point">').appendTo(horizontalLinesRowTemplate);
+					var hLine = Line.getByCoords('rows', rowCounter, colCounter);
+					$(hLine.getTemplate()).appendTo(hLinesRow).data('LineObj', hLine).addClass(hLine.isMarked()?'marked':'' );
+					$(self.pointTemplate).appendTo(hLinesRow);
 				}
 				if(rowCounter < Config.boardSize) {
-					var vertLine = Line.getByCoords('columns', colCounter, rowCounter);
+					var vLine = Line.getByCoords('columns', colCounter, rowCounter);
 					
-					$('<div class="line vertical">').appendTo(verticalLinesRowTemplate).data('LineObj', vertLine).addClass(vertLine.isMarked()?'marked':'' );
+					$(vLine.getTemplate()).appendTo(vLinesRow).data('LineObj', vLine).addClass(vLine.isMarked()?'marked':'' );
 
 					if(colCounter < Config.boardSize) {
 						var box = Box.getByCoords(rowCounter,colCounter);
-						$('<div class="box">').appendTo(verticalLinesRowTemplate).data('BoxObj', box).css('background-color', box.isCompleted()? box.getCompleterPlayer().colour:'');
+						$(Box.template).appendTo(vLinesRow).data('BoxObj', box).css('background-color', box.isCompleted()? box.getCompleterPlayer().colour:'');
 					}
 				}
 			}
-			$('#board').append(horizontalLinesRowTemplate);
-			$('#board').append(verticalLinesRowTemplate);
+			$('#board').append(hLinesRow);
+			$('#board').append(vLinesRow);
 			rowCounter +=1;
 		});
 		$('#board').on('click', '.line:not(.marked)', Game.lineClicked);
