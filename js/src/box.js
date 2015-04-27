@@ -56,6 +56,7 @@ $.extend(Box.prototype,{
 
 	setCompleterPlayer: function (completer) {
 		this._completerPlayer = completer;
+		Game.increaseCompletedBoxes(completer);
 	},
 
 	getCompleterPlayer: function () {

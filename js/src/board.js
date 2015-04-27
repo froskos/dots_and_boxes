@@ -15,6 +15,7 @@ var Board = {
 
 	reset: function() {
 		this.create();
+		this.render();
 	},
 
 	render: function () {
@@ -44,7 +45,7 @@ var Board = {
 
 					if(colCounter < Config.boardSize) {
 						var box = Box.getByCoords(rowCounter,colCounter);
-						$('<div class="box">').appendTo(verticalLinesRowTemplate).data('BoxObj', box).css('background-color', box.getCompleterPlayer());
+						$('<div class="box">').appendTo(verticalLinesRowTemplate).data('BoxObj', box).css('background-color', box.isCompleted()? box.getCompleterPlayer().colour:'');
 					}
 				}
 			}
