@@ -53,7 +53,7 @@ var Board = {
 			$('#board').append(verticalLinesRowTemplate);
 			rowCounter +=1;
 		});
-		$('#board').on('click', '.line', Game.lineClicked);
+		$('#board').on('click', '.line:not(.marked)', Game.lineClicked);
 	}
 
 };

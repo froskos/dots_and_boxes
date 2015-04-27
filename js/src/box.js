@@ -86,12 +86,12 @@ $.extend(Box.prototype,{
 	},
 
 	calculateCompleted: function () {
-		if (this.isCompleted()) {return false;}
-		else if (this.allLinesMarked()){
+		if(this.allLinesMarked()){
 			this.complete();
 			this.setCompleterPlayer(Game.getCurrentPlayer());
 			return true;
 		}
+		return false
 	}
 
 });

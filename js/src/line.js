@@ -35,7 +35,7 @@ $.extend(Line, {
 });
 
 $.extend(Line.prototype,{
-	//
+	// Determines whether the line corresponds to a row of lines or a column of lines
 	inRowOrColumn: function() {return this._type === 'horizontal'? 'rows':'columns'},
 
 	// Register
@@ -60,20 +60,12 @@ $.extend(Line.prototype,{
 		return this._type == 'horizontal'
 	},
 
-	isLeftBorder: function () {
-		return this.isVertical() && this._rowOrColumnIndex == 0;
+	isLeftOrTopBorder: function () {
+		return this._rowOrColumnIndex == 0;
 	},
 
-	isTopBorder: function () {
-		return this.isHorizontal() && this._rowOrColumnIndex == 0;
-	},
-
-	isRightBorder:function () {
-		return this.isVertical() && this._rowOrColumnIndex == Config.boardSize;
-	},
-
-	isBottomBorder:function () {
-		return this.isHorizontal() && this._rowOrColumnIndex == Config.boardSize;
+	isRighOrBottomBorder:function () {
+		return this._rowOrColumnIndex == Config.boardSize;
 	},
 
   template: function() {
@@ -85,35 +77,26 @@ $.extend(Line.prototype,{
 	// Returns the box(es) from which this line makes part 
 
 	getBoxes: function () {
-		if (this._boxes) {
-			return this._boxes;
-		} 
-		else {
-			var a =	this.calculateBoxes();
-			return a;
-		}
-	},
-
-	calculateBoxes: function () {
 		var boxes = [];
 
 		if(this.isHorizontal()) {
-			if(!this.isTopBorder())
+			if(!this.isLeftOrTopBorder())
 				boxes.push(Box.getByCoords(this._rowOrColumnIndex - 1,this._lineIndex));
-			if(!this.isBottomBorder()) 
+			if(!this.isRighOrBottomBorder()) 
 				boxes.push(Box.getByCoords(this._rowOrColumnIndex, this._lineIndex));
 		}
 		if(this.isVertical()) {
-			if(!this.isLeftBorder())
+			if(!this.isLeftOrTopBorder())
 				boxes.push(Box.getByCoords(this._lineIndex,this._rowOrColumnIndex - 1));
-			if(!this.isRightBorder())
+			if(!this.isRighOrBottomBorder())
 				boxes.push(Box.getByCoords(this._lineIndex,this._rowOrColumnIndex));
 		}
-		this._boxes = boxes;
 		return boxes;
 	},
 
-	checkIfClosedBox: function () {
+	//
+
+	hasClosedBox: function () {
 		var returnValue = false;
 		var boxes = this.getBoxes();
 		for(var i=0; i < boxes.length; i++) {

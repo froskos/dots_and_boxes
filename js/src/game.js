@@ -42,29 +42,19 @@ var Game = {
 	},
 
 	isFinished: function () {
-		// console.info(this.totalBoxes)
-		// console.info("acumuladas: " + (this._player1.completedBoxes + this._player1.completedBoxes));
-		// debugger;
 		return (this._player1.completedBoxes + this._player2.completedBoxes) == this.totalBoxes;
 	},
 
 	// Handler for when a line is clicked
 	lineClicked: function (event) {
 		var lineObj =	$(this).data('LineObj');
-		if (lineObj.isMarked()) {
-			return false;
+		
+		lineObj.mark();
+		if( !lineObj.hasClosedBox() ) {
+			Game.togglePlayer();			
 		}
-		else {
-			var boxes;
-			
-			lineObj.mark();
-			if( !lineObj.checkIfClosedBox() ) {
-				Game.togglePlayer();
-				
-			}
-			Board.render();
-			Game.renderInfo();
-		}
+		Board.render();
+		Game.renderInfo();
 	},
 
 	restartClicked: function () {
